@@ -1,7 +1,6 @@
 import { MongoClient } from "mongodb";
 
-const uri = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}`;
-
+const uri = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/?authSource=admin`;
 const options = {};
 
 const client = new MongoClient(uri, options);

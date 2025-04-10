@@ -1,67 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## How It Works in Docker
 
-## Getting Started
+This project is designed to run in a Dockerized environment, making it easy to set up and deploy. Here's how it works:
 
-First, run the development server:
+1. **Docker Setup**:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+   - The `Dockerfile` defines the build process for the Next.js application. It installs dependencies, builds the application, and sets up the container to serve the app.
+   - The `docker-compose.yml` file orchestrates multiple services, including the Next.js app and a MongoDB database.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Services**:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   - **MongoDB**: A MongoDB container is set up with the latest MongoDB image. It exposes port `27017` and uses environment variables for the root username and password.
+   - **Next.js App**: The Next.js application is built and served in a container. It depends on the MongoDB service and connects to it using environment variables.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. **Environment Variables**:
 
-## Learn More
+   - The project uses environment variables to configure the MongoDB connection (e.g., `MONGO_HOST`, `MONGO_PORT`, `MONGO_USER`, `MONGO_PASS`). These should be defined in a `.env` file.
 
-To learn more about Next.js, take a look at the following resources:
+4. **Volumes**:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   - A Docker volume (`mongo_data`) is used to persist MongoDB data, ensuring that the database retains its state even if the container is restarted.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+5. **Running the Project**:
 
-## Deploy on Vercel
+   - To start the project, run the following command:
+     ```bash
+     docker-compose up --build
+     ```
+   - This will build the Next.js app, start the MongoDB service, and run both containers.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+6. **Accessing the Application**:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   - Once the containers are running, the Next.js app will be available at [http://localhost:3000](http://localhost:3000).
+   - The MongoDB service will be accessible on `localhost:27017`.
 
-```
-docker-next-js
-├─ docker-compose.yml
-├─ eslint.config.mjs
-├─ next.config.ts
-├─ package-lock.json
-├─ package.json
-├─ postcss.config.mjs
-├─ public
-│  ├─ file.svg
-│  ├─ globe.svg
-│  ├─ next.svg
-│  ├─ vercel.svg
-│  └─ window.svg
-├─ README.md
-├─ src
-│  ├─ app
-│  │  ├─ favicon.ico
-│  │  ├─ globals.css
-│  │  ├─ layout.tsx
-│  │  └─ page.tsx
-│  ├─ Dockerfile
-│  ├─ lib
-│  │  └─ mongodb.ts
-│  └─ pages
-│     └─ api
-│        └─ test-connection.ts
-└─ tsconfig.json
+7. **Starting MongoDB Locally on Another Machine**:
 
-```
+   - You need to connect to MongoDB running on another machine, ensure MongoDB is started locally on that machine. Use the following command:
+     ```bash
+     mongosh -u <username> -p <password> --authenticationDatabase admin --host 127.0.0.1 --port 27017
+     ```
+   - Replace `<username>` and `<password>` with the appropriate username and password.
+
+8. **Stopping the Project**:
+
+   - To stop the containers, run:
+     ```bash
+     docker-compose down
+     ```
+
+9. **Customizing the Setup**:
+   - You can modify the `docker-compose.yml` file to change ports, environment variables, or other configurations as needed.
+
+This setup ensures that the application is portable and can be easily deployed in any environment that supports Docker.

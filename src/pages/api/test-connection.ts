@@ -16,7 +16,6 @@ export default async function handler(
     console.log("✅ MongoDB Connected");
     res.status(200).json({ message: "Connected to MongoDB", result });
   } catch (error: unknown) {
-    // Replace `any` with `unknown` or a specific error type
     console.error("❌ MongoDB Connection Failed", error);
     res
       .status(500)
